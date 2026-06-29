@@ -9,7 +9,7 @@ export async function GET(request: NextRequest) {
   const name = searchParams.get('name');
   console.log(name);
   //select title from books where to_tsvector(title) @@ to_tsquery('Lit:*');
-  const { data, error } = await supabase
+  const { data, error1 } = await supabase
   .from("Medicine")
   .select("*")
   .eq("medicine_name", name)
@@ -26,12 +26,13 @@ export async function GET(request: NextRequest) {
 console.log(data);
 
   const response = await ai.models.generateContent({
-    model: "gemini-2.5-pro",
+    model: "gemini-2.5-flash-lite",
     contents: [   
       {
       text: `
     Search for medicine name ${name}
   Return only valid JSON
+  
 {
   "medicine_name":"",
   "generic_name":"",
@@ -50,8 +51,12 @@ If medicine is not found return
       },
     ],
   });
+  const text = response.text
+  .replace(/```json/g, "")
+  .replace(/```/g, "")
+  .trim();
   
-  const medicine = JSON.parse(response.text);
+  const medicine = JSON.parse(text);
   console.log(medicine);
 
   if (medicine.error) {
@@ -61,9 +66,9 @@ If medicine is not found return
     })
 
   // return 404 or appropriate response
-  
+
 }
-  await supabase
+ const {data2,error2} = await supabase
   .from("Medicine")
   .insert({
     medicine_name:medicine.medicine_name,
@@ -73,7 +78,8 @@ If medicine is not found return
     uses:medicine.uses,
     side_effects:medicine.side_effects
   });
-
+  console.log(data2);
+  console.log(error2);
   return Response.json({
     result: medicine,
   });
