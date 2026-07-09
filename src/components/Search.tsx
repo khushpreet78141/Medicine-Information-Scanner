@@ -26,7 +26,7 @@ const Search = () => {
     ]
 
     const handleChangeSearch = (e)=>{
-        setSearchInput(e.target.value);
+        setSearchInput(e.target.value.trim());
         
     }
 
@@ -38,8 +38,11 @@ const Search = () => {
     const handleRequestSearch = async(e)=>{
       if(e.key === 'Enter'){
           const res = await axios.get(`/api/medicineAPI/?name=${searchInput}`);
-          console.log(res.data);
+          console.log(res.data.result);
+          medicineData.push(res.data.result);
+
       }
+      
     }
 
     

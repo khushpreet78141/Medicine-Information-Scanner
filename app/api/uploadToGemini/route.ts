@@ -29,21 +29,47 @@ export async function POST(req: Request) {
       },
       {
         text: `
-  Identify the medicine in this image.
-  Return:
-  1. Medicine name
-  2. Generic name
-  3. Main uses
-  4. Common side effects
-  5. Safety disclaimer if uncertain
+  Return only valid JSON
+  
+{
+  "medicine_name":"",
+  "generic_name":"",
+  "quantity":"",
+  "category":"",
+  "uses":"",
+  "side_effects":[]
+}
+  If medicine is not found return
+
+{
+   "error":"Medicine not found"
+}
+   
   `
       },
     ],
   });
+  let medicine;
+  if(response.text){
+      const text = response.text
+  .replace(/```json/g, "")
+  .replace(/```/g, "")
+  .trim();
+   medicine = JSON.parse(text);
+
+  }
+  if (medicine.error) {
+    return Response.json({
+      status:404,
+      message:"Response not given by Gemini"
+    })
+  }
 
   return Response.json({
-    result: response.text,
+    result: medicine,
+    
   })
+  
 }
 
 ``
