@@ -16,12 +16,15 @@ const Reminder = () => {
   endingDate:"",
   timing: "",
 })
+
+
   const [addReminder, setAddReminder] = useState<Boolean>(false)
   const [submitting, setSubmitting] = useState(false);
   
   const handleSubmit = async () => {
     setSubmitting(true)
     if(!formData.frequency || !formData.meal || !formData.quantity || !formData.timing || !formData.medicine || !formData.startingDate || !formData.endingDate){
+      setSubmitting(false);
       return;
     };
     const res = await axios.post("/api/reminder",{formData});
@@ -34,15 +37,43 @@ const Reminder = () => {
     setAddReminder(prev => !prev);
   }
 
-  const [showNotifications, setShowNotifications] = useState(true);
+  const [showNotifications, setShowNotifications] = useState(false);
+  //if(showNotifications){
+
+  //}
+
+  const showNotificationFunction = (e)=>{
+    setShowNotifications(e.target.checked);
+    async function showNotification() {
+  const result = await Notification.requestPermission();
+
+  if (result === "granted") {
+    const registration = await navigator.serviceWorker.ready;
+
+    registration.showNotification("Vibration Sample", {
+      body: "Buzz! Buzz!",
+      icon: "../images/touch/chrome-touch-icon-192x192.png",
+      vibrate: [200, 100, 200, 100, 200, 100, 200],
+      tag: "vibration-sample",
+    });
+  }
+} 
+if(e.target.checked){
+  showNotification();
+}
+
+}
   
+  
+
+
 
   return (
     <div className="relative min-h-screen">
       <div className='ml-72 mt-20'>
         <h1 className='font-black font-bold text-5xl'>Reminders</h1>
-        <p>Daily Reminders , Weekly Reminders  , Monthly Reminders</p>
-        <div className=''><input type="checkbox" name="" id="" checked={} onChange={setShowNotifications}/>Show Notifications</div>
+        <p className='my-1 '>Daily Reminders , Weekly Reminders  , Monthly Reminders</p>
+        <div className='ml-[800px] flex items-center gap-1 font-extrabold'><input type="checkbox" name="" id="" checked={showNotifications} onChange={showNotificationFunction} />Show Notifications</div>
         <button className='flex items-center min-w-4xl m-2 my-8 p-1 justify-center rounded-4xl bg-black text-white px-3 gap-5 text-2xl' onClick={handleAddReminder}> <MdAddAlarm />Add Reminder</button>
         <div className='border border-gray-400 w-max p-3 rounded-4xl'>
           <h1 className='my-1 flex'><span className='flex items-center gap-2 text-xl font-bold'><FaTablets />Paracetamol</span><span className='ml-4 mb-2 mr-0 text-sm text-gray-500'>500mg or tablets</span></h1>
