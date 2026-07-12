@@ -7,4 +7,7 @@ self.addEventListener("activate", (event) => {
     console.log("Service Worker Activated.");
 });
 
+self.addEventListener("push",(event)=>{
+    
+});
 

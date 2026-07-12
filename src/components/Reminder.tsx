@@ -4,6 +4,7 @@ import React from 'react'
 import { useState } from 'react';
 import { FaTablets } from "react-icons/fa";
 import { MdAddAlarm } from "react-icons/md";
+
 const Reminder = () => {
 
 
@@ -21,6 +22,7 @@ const Reminder = () => {
   const [addReminder, setAddReminder] = useState<Boolean>(false)
   const [submitting, setSubmitting] = useState(false);
   
+  
   const handleSubmit = async () => {
     setSubmitting(true)
     if(!formData.frequency || !formData.meal || !formData.quantity || !formData.timing || !formData.medicine || !formData.startingDate || !formData.endingDate){
@@ -37,6 +39,7 @@ const Reminder = () => {
     setAddReminder(prev => !prev);
   }
 
+
   const [showNotifications, setShowNotifications] = useState(false);
   //if(showNotifications){
 
@@ -48,25 +51,29 @@ const Reminder = () => {
   const result = await Notification.requestPermission();
 
   if (result === "granted") {
-    const registration = await navigator.serviceWorker.ready;
+    const serviceWorkerRegistration = await navigator.serviceWorker.ready;
 
-    registration.showNotification("Vibration Sample", {
+    serviceWorkerRegistration.showNotification("Vibration Sample", {
       body: "Buzz! Buzz!",
       icon: "../images/touch/chrome-touch-icon-192x192.png",
       vibrate: [200, 100, 200, 100, 200, 100, 200],
       tag: "vibration-sample",
     });
-  }
+    
+    // Get a PushSubscription object
+const pushSubscription =
+  await serviceWorkerRegistration.pushManager.subscribe({ userVisibleOnly: true,applicationServerKey:process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY});
+console.log("pushSubscription",pushSubscription);
+
+const res = await axios.post("/api/pushSubscription",{pushSubscription});
+console.log(res.data);
+
+  } 
 } 
 if(e.target.checked){
   showNotification();
 }
-
 }
-  
-  
-
-
 
   return (
     <div className="relative min-h-screen">
@@ -88,7 +95,6 @@ if(e.target.checked){
           <div className='flex gap-3 items-center justify-evenly mt-4'><button className='bg-black text-white px-5  rounded-3xl cursor-pointer '>Edit</button><button className='bg-black text-white px-5 cursor-pointer rounded-3xl'>Pause</button><button className='bg-black text-white px-5 cursor-pointer rounded-3xl'>Delete</button></div>
 
         </div>
-
 
         {addReminder && (
           <> 
