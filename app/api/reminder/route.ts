@@ -3,9 +3,8 @@ export const dynamic = 'force-static'
 
 export async function POST(request: Request) {
     const {formData }= await request.json();
-    console.log(formData);
+ 
   
-
 const {data,error} = await supabase.from("reminders").insert({
     quantity:formData.quantity,
     frequency:formData.frequency,
