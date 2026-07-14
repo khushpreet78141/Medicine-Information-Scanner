@@ -1,4 +1,5 @@
 import supabase from "@/src/lib/supabase";
+import { timeStamp } from "console";
 //const webpush = require('web-push');
 import webpush from "web-push"
 webpush.setVapidDetails(
@@ -8,6 +9,14 @@ webpush.setVapidDetails(
 );
 
 export async function GET(request: Request) {
+    const currentTime = new Date().toLocaleTimeString("en-GB",{
+        hour:"2-digit",
+        minute:"2-digit",
+        hour12:false
+    });
+    
+    console.log("currentTime :",currentTime);
+    const {reminder,error} = await supabase.from('reminder').select("*");
     const {data,error} = await supabase.from("pushSubscription").select("*");
     console.log("all pushSubscription",data);
     if (error) {
@@ -39,6 +48,8 @@ export async function GET(request: Request) {
 });
 
 }
+
+
 
 
 

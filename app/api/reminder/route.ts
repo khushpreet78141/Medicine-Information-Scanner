@@ -16,7 +16,12 @@ const {data,error} = await supabase.from("reminders").insert({
 
 console.log(data);
 console.log("reminders",error);
-
+console.log("timing",formData.timing)
+const times = formData.timing.split(",")
+for (let index = 0; index < times.length; index++) {
+    const element = times[index];
+    
+}
 const {data2,error2} = await supabase.from("Reminder_Times").insert({
     time:formData.timing
 });
@@ -25,8 +30,9 @@ console.log(data2);
 console.log("Reminder_Times",error2);
 //  const data = await res.json();
   return Response.json({ data });
-
+  
 }
+
 
 
 
