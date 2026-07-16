@@ -3,6 +3,8 @@
 import Link from "next/link";
 import { Pill, Activity } from "lucide-react";
 import { useState } from "react";
+import axios from "axios";
+
 export default function Login() {
 
   const [loginData, setLoginData] = useState({
@@ -10,9 +12,14 @@ export default function Login() {
     password:""
   })
 
-  const handleSubmit = ()=>{
-       
-
+  const handleSubmit = async()=>{
+    try{
+      const res = await axios.post("/api/login",{loginData});
+      console.log("Logged in User",res.data.data)
+    }catch(error){
+      console.error("Error ",error)
+    }
+      
   }
 
 

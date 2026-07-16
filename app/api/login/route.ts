@@ -8,7 +8,14 @@ export async function POST(request: Request) {
 });
 
 console.log("logged in user",data.user)
+
 if(error){
-    console.log()
+    console.log("error",error);
+    return Response.json({success:false,message:"Failed to login"})
 }
+return Response.json(data);
 }
+
+
+
+

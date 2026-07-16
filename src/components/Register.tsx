@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { Pill, Activity } from "lucide-react";
 import { useState } from "react";
+import axios from "axios";
 const Register = () => {
    const [registerData, setRegisterData] = useState({
       name:"",
@@ -12,14 +13,21 @@ const Register = () => {
 
     const [temporaryPass, setTemporaryPass] = useState("")
 
-    const handleSubmit = ()=>{
-        
+    const handleSubmit = async()=>{
+      if(temporaryPass != registerData.password){
+        console.log("Password Didn't match");
+        return  
+      }
+      try{
 
+        const res = await axios.post("/api/register",registerData);
+        console.log("frontend response for register",res.data.data);
+      }catch(err){
+        console.error("error",err);
+      }
     }
     
-
-
-  
+    
   return (
     <div className="min-h-screen bg-zinc-950 flex items-center justify-center p-6">
       <div className="w-full max-w-6xl bg-zinc-900 border border-zinc-800 rounded-3xl overflow-hidden shadow-2xl grid md:grid-cols-2">
