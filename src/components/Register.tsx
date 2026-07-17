@@ -20,7 +20,7 @@ const Register = () => {
       }
       try{
 
-        const res = await axios.post("/api/register",registerData);
+        const res = await axios.post("/api/register",{registerData});
         console.log("frontend response for register",res.data.data);
       }catch(err){
         console.error("error",err);
@@ -76,7 +76,7 @@ const Register = () => {
             </p>
 
             <form className="mt-10 space-y-6" method="post" onSubmit={handleSubmit}>
-
+              
               <div>
                 <label className="block text-sm text-zinc-300 mb-2">
                   Full Name
