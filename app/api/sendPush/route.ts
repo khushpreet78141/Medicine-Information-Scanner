@@ -15,6 +15,7 @@ export async function GET(request: Request) {
         hour12:false
     });
     
+
     console.log("currentTime :",currentTime);
     const {reminder,error} = await supabase.from('reminder').select("*");
     const {data,error} = await supabase.from("pushSubscription").select("*");
@@ -42,13 +43,14 @@ export async function GET(request: Request) {
         console.error(error);
     }
     }
+
     return Response.json({
     success: true,
     message: "Notifications sent."
+
 });
 
 }
-
 
 
 

@@ -18,8 +18,7 @@ export default function Login() {
       console.log("Logged in User",res.data.data)
     }catch(error){
       console.error("Error ",error)
-    }
-      
+    }   
   }
 
 
