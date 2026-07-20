@@ -31,11 +31,12 @@ export default function Home() {
   return (
     
     <div className="">
+
         {/*<Upload/>*/}
         {/*<Search/>*/}
         {!showLogin && <Reminder/>}
         {/*<Login/>*/}
-        {showLogin && <Register/>}
+        {showLogin && <Login onLoginSuccess={() => setShowLogin(false)} />}
         {/*<Register/>*/}
 
     </div>
