@@ -4,6 +4,7 @@ import Link from "next/link";
 import { Pill, Activity } from "lucide-react";
 import { useState } from "react";
 import axios from "axios";
+import supabase from "../lib/supabase";
 const Register = () => {
    const [registerData, setRegisterData] = useState({
       name:"",
@@ -20,8 +21,16 @@ const Register = () => {
       }
       try{
 
-        const res = await axios.post("/api/register",{registerData});
-        console.log("frontend response for register",res.data.data);
+          const {data,error} =  await supabase.auth.signUp({
+    
+  email:registerData.email,
+  password:registerData.password,
+  options:{
+    data:{
+        name:registerData.name
+    }
+  }
+});
       }catch(err){
         console.error("error",err);
       }

@@ -4,7 +4,7 @@ import React from 'react'
 import { useState } from 'react';
 import { FaTablets } from "react-icons/fa";
 import { MdAddAlarm } from "react-icons/md";
-
+import supabase from '../lib/supabase';
 const Reminder = () => {
 
 
@@ -25,12 +25,47 @@ const Reminder = () => {
   
   const handleSubmit = async () => {
     setSubmitting(true)
+    console.log("Handle Reminder Submit Called !!!")
     if(!formData.frequency || !formData.meal || !formData.quantity || !formData.timing || !formData.medicine || !formData.startingDate || !formData.endingDate){
       setSubmitting(false);
       return;
     };
-    const res = await axios.post("/api/reminder",{formData});
-    console.log(res.data);
+      const {
+    data: { user },
+    } = await supabase.auth.getUser();
+
+    if(!user){
+      return "User not authenticated"
+    }
+
+    const {data2,error} = await supabase.from("reminders").insert({
+
+    user_id:user.id,
+    quantity:formData.quantity,
+    frequency:formData.frequency,
+    meal:formData.meal,
+    start_date:formData.startingDate,
+    end_date:formData.endingDate,
+    medicine_name:formData.medicine
+
+});
+const times = formData.timing.split(",");
+
+for (let index = 0; index < times.length; index++) {
+    const element = times[index];
+    //console.log("Reminder Times are :",element);
+    const {data3,error2} = await supabase.from("Reminder_Times").insert({
+    time:element.trim()
+});
+}
+
+//const {data3,error2} = await supabase.from("Reminder_Times").insert({
+//    time:formData.timing
+//});
+
+    //const res = await axios.post("/api/reminder",{formData});
+
+    //console.log("Data after Reminder",res.data);
     setSubmitting(false)
   }
 
@@ -72,7 +107,11 @@ console.log(res.data);
 } 
 if(e.target.checked){
   showNotification();
+} 
 }
+
+if(submitting){
+  return <div className='bg-black w-full min-h-screen text-2xl font-bold text-white'>Loading State Submitting .......</div>
 }
 
   return (
@@ -124,7 +163,8 @@ if(e.target.checked){
             </div>  
           </>  
         )} 
-                
+
+        
       </div> 
     </div> 
   )

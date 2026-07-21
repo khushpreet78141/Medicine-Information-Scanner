@@ -13,20 +13,26 @@ import { useEffect } from "react";
 
 export default function Home() {
   const [showLogin, setShowLogin] = useState(true);
-  useEffect(() => {
-    const getUserApi = async()=>{
-       
+  const [loadingStateLogin, setLoadingStateLogin] = useState(false)
+
+ useEffect(() => {
+  setLoadingStateLogin(true)
   const {
-  data: { user },
-    } = await supabase.auth.getUser();
-    if(user){
-      setShowLogin(false);
-    }
-    }
-    getUserApi();
-  }, []);
+    data: { subscription },
+  } = supabase.auth.onAuthStateChange((event, session) => {
+    setShowLogin(!session);
+    
+  });
+  setLoadingStateLogin(false)
+    console.log("Get user subscription API has been called....")
+
+  return () => subscription.unsubscribe();
+}, []);
  
   useServiceWorker();
+  if(loadingStateLogin){
+    return <div className="text-3xl font-bold bg-black text-white ">Loading ....</div>
+  }
     
   return (
     
@@ -34,11 +40,13 @@ export default function Home() {
 
         {/*<Upload/>*/}
         {/*<Search/>*/}
-        {!showLogin && <Reminder/>}
+      
+      {showLogin ? <Login/> : <Reminder/>}
         {/*<Login/>*/}
-        {showLogin && <Login onLoginSuccess={() => setShowLogin(false)} />}
+      
         {/*<Register/>*/}
 
     </div>
   );
 }
+

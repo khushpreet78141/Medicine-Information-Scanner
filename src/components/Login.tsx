@@ -4,7 +4,7 @@ import Link from "next/link";
 import { Pill, Activity } from "lucide-react";
 import { useState } from "react";
 import axios from "axios";
-
+import supabase from "../lib/supabase";
 export default function Login() {
 
   const [loginData, setLoginData] = useState({
@@ -12,17 +12,21 @@ export default function Login() {
     password:""
   })
 
-  const handleSubmit = async()=>{
+  const handleSubmit = async(e)=>{
+    e.preventDefault();
     try{
-      const res = await axios.post("/api/login",{loginData});
-      console.log("Logged in User",res.data.data)
-      if(res.success){
-        
-      }
+         const {data,error} =  await supabase.auth.signInWithPassword({
+  email:loginData.email,
+  password:loginData.password,
+});
+console.log("Session after login success",data.session);
+console.log(data.user);
+    
+      
     }catch(error){
-      console.error("Error ",error)
+      console.error("Error ",error);
     }   
-  }
+  } 
 
 
   return (
