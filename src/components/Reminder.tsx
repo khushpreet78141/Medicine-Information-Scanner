@@ -7,7 +7,6 @@ import { MdAddAlarm } from "react-icons/md";
 import supabase from '../lib/supabase';
 const Reminder = () => {
 
-
   const [formData, setFormData] = useState({
   medicine: "",
   quantity: "",
@@ -18,11 +17,10 @@ const Reminder = () => {
   timing: "",
 })
 
-
-  const [addReminder, setAddReminder] = useState<Boolean>(false)
+  const [addReminder, setAddReminder] = useState<Boolean>(false);
   const [submitting, setSubmitting] = useState(false);
   
-  
+
   const handleSubmit = async () => {
     setSubmitting(true)
     console.log("Handle Reminder Submit Called !!!")
@@ -49,36 +47,31 @@ const Reminder = () => {
     medicine_name:formData.medicine
 
 });
+
 const times = formData.timing.split(",");
 
 for (let index = 0; index < times.length; index++) {
     const element = times[index];
-    //console.log("Reminder Times are :",element);
+    
     const {data3,error2} = await supabase.from("Reminder_Times").insert({
     time:element.trim()
 });
+
 }
 
-//const {data3,error2} = await supabase.from("Reminder_Times").insert({
-//    time:formData.timing
-//});
+    setSubmitting(false);
+    setAddReminder(false);
 
-    //const res = await axios.post("/api/reminder",{formData});
-
-    //console.log("Data after Reminder",res.data);
-    setSubmitting(false)
   }
+
 
 
   const handleAddReminder = () => {
     setAddReminder(prev => !prev);
   }
 
-
   const [showNotifications, setShowNotifications] = useState(false);
-  //if(showNotifications){
-
-  //}
+  
 
   const showNotificationFunction = (e)=>{
     setShowNotifications(e.target.checked);
@@ -111,7 +104,7 @@ if(e.target.checked){
 }
 
 if(submitting){
-  return <div className='bg-black w-full min-h-screen text-2xl font-bold text-white'>Loading State Submitting .......</div>
+  return <div className='bg-black w-full min-h-screen text-2xl font-bold text-white text-center'>Loading State Submitting .......</div>
 }
 
   return (
@@ -158,13 +151,12 @@ if(submitting){
                   <div className='outline-0 border border-gray-400 p-1  rounded-xl flex justify-evenly items-center'><span>Ending Date: </span> <input type="date" className="outline-0 border border-gray-400 p-1  rounded-xl" placeholder='Ending Time' onChange={(e)=>setFormData({...formData,endingDate:e.target.value.trim()})} /></div>
                   <input type="text" className="outline-0 border border-gray-400 p-1  rounded-xl" placeholder='Timing : ex:9:00AM , 12:00PM ' onChange={(e)=>setFormData({...formData,timing:e.target.value.trim()})} />
                   <button type="submit" className='bg-black  text-white font-bold p-1 rounded-xl mb-3 disabled:bg-gray-700' disabled={submitting}>Save</button> 
-                </form>      
+                </form>  
               </div>  
             </div>  
           </>  
         )} 
-
-        
+  
       </div> 
     </div> 
   )
