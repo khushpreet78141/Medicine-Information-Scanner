@@ -8,11 +8,11 @@ export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams;
   const name = searchParams.get('name');
   console.log(name);
-  //select title from books where to_tsvector(title) @@ to_tsquery('Lit:*');
+
   const { data, error:error1 } = await supabase
   .from("Medicine")
   .select("*")
-  .eq("medicine_name", name)
+  .eq("name", name)
   .maybeSingle();
 
 
@@ -34,7 +34,7 @@ console.log(data);
   Return only valid JSON
   
 {
-  "medicine_name":"",
+  "name":"",
   "generic_name":"",
   "quantity":"",
   "category":"",
@@ -51,6 +51,12 @@ If medicine is not found return
       },
     ],
   });
+  if(!response.text){
+     return Response.json({
+    success:false,
+    message:"Text not return By Gemini API"
+  });
+  }
   const text = response.text
   .replace(/```json/g, "")
   .replace(/```/g, "")
@@ -71,7 +77,7 @@ If medicine is not found return
  const {data:data2,error:error2} = await supabase
   .from("Medicine")
   .insert({
-    medicine_name:medicine.medicine_name,
+    name:medicine.name,
     generic_name: medicine.generic_name,
     quantity: medicine.quantity,
     category: medicine.category,
