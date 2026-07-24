@@ -9,7 +9,7 @@ export async function GET(request: NextRequest) {
   const name = searchParams.get('name');
   console.log(name);
   //select title from books where to_tsvector(title) @@ to_tsquery('Lit:*');
-  const { data, error1 } = await supabase
+  const { data, error:error1 } = await supabase
   .from("Medicine")
   .select("*")
   .eq("medicine_name", name)
@@ -68,7 +68,7 @@ If medicine is not found return
   // return 404 or appropriate response
 
 }
- const {data2,error2} = await supabase
+ const {data:data2,error:error2} = await supabase
   .from("Medicine")
   .insert({
     medicine_name:medicine.medicine_name,

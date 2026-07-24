@@ -18,7 +18,7 @@ export async function GET(request: Request) {
     
     console.log("currentTime :",currentTime);
      
-
+    
     const {data:reminder,error} = await supabase.from("Reminder-Times").select("*").eq("time",currentTime);
     if (error) {
   return Response.json(
@@ -38,13 +38,14 @@ if (!reminder || reminder.length === 0) {
         const {data:reminders,error:reminder_error} = await supabase.from("reminders").select("*").eq("id",element.reminder_id).single();
             if(!reminders){
                 console.error(reminder_error);
-  continue;
+                    continue;
             }
                 const {data:pushSubscription,error:pushSubscription_error} = await supabase.from("pushSubscription").select("*").eq("user_id",reminders.user_id);
                 if(!pushSubscription || pushSubscription_error){
                     console.error(pushSubscription_error);
                     continue
                 }
+                
                 console.log("pushSubscription for loggedIn user",pushSubscription);
                 for (let ind = 0; ind < pushSubscription.length; ind++) {
                     const ele = pushSubscription[ind];
@@ -52,6 +53,7 @@ if (!reminder || reminder.length === 0) {
                             endpoint: ele.endpoint,
                             keys: ele.keys,
                     };
+
          await webpush.sendNotification(ele,  JSON.stringify({
         title: "Medicine Reminder",
         body: `Time to take your medicine 💊 ${reminders.medicine_name} . `
