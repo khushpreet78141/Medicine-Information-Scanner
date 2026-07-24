@@ -15,7 +15,7 @@ export async function GET(request: NextRequest) {
   .eq("name", name)
   .maybeSingle();
 
-
+  
   if (data) {
     return Response.json({
         source: "database",
@@ -39,7 +39,8 @@ console.log(data);
   "quantity":"",
   "category":"",
   "uses":"",
-  "side_effects":[]
+  "side_effects":[],
+  "precautions":[]
 }
 
 If medicine is not found return
@@ -77,13 +78,18 @@ If medicine is not found return
  const {data:data2,error:error2} = await supabase
   .from("Medicine")
   .insert({
-    name:medicine.name,
+    
     generic_name: medicine.generic_name,
     quantity: medicine.quantity,
     category: medicine.category,
     uses:medicine.uses,
-    side_effects:medicine.side_effects
+    side_effects:medicine.side_effects,
+    precautions:medicine.precautions,
+    name:medicine.name,
+
+
   });
+
   console.log(data2);
   console.log(error2);
   return Response.json({
