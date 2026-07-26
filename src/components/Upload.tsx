@@ -133,6 +133,7 @@ const Upload = () => {
   );
   console.log(res.data.result);
   setAnalysis(res.data.result); 
+  
   }
 
 return (

@@ -15,7 +15,7 @@ export async function GET(request: NextRequest) {
   .eq("name", name)
   .maybeSingle();
 
-  
+
   if (data) {
     return Response.json({
         source: "database",
@@ -26,32 +26,52 @@ export async function GET(request: NextRequest) {
 console.log(data);
 
   const response = await ai.models.generateContent({
-    model: "gemini-2.5-flash-lite",
-    contents: [   
-      {
+  model: "gemini-2.5-flash-lite",
+  contents: [
+    {
       text: `
-    Search for medicine name ${name}
-  Return only valid JSON
-  
+You are a medicine recommendation assistant.
+
+The user searched:
+"${name}"
+
+The search may be:
+- Medicine name
+- Generic name
+- Disease
+- Symptom
+- Medical condition
+- Medicine category
+
+Return the most relevant 3 to 5 medicines.
+
+Return ONLY valid JSON.
+Do not include markdown or explanations.
+
 {
-  "name":"",
-  "generic_name":"",
-  "quantity":"",
-  "category":"",
-  "uses":"",
-  "side_effects":[],
-  "precautions":[]
+  "results": [
+    {
+      "name": "",
+      "generic_name": "",
+      "quantity": "",
+      "category": "",
+      "uses": "",
+      "side_effects": [],
+      "precautions": []
+    }
+  ]
 }
 
-If medicine is not found return
+If nothing relevant is found:
 
 {
-   "error":"Medicine not found"
-} 
-  `
-      },
-    ],
-  });
+  "results": [],
+  "error": "No relevant medicines found"
+}
+`
+    }
+  ]
+});
   if(!response.text){
      return Response.json({
     success:false,
