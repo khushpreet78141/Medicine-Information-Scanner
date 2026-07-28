@@ -15,7 +15,7 @@ const Upload = () => {
   let height = 400;
   const [video, setVideo] = useState(false);
   const [showPreview, setShowPreview] = useState(false);
-  const [capturedImage, setCapturedImage] = useState<File|null>(null);
+  const [capturedImage, setCapturedImage] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string>("");
   const [analysis, setAnalysis] = useState("");
 
@@ -58,18 +58,18 @@ const Upload = () => {
     if (!streaming.current) {
 
       height = videoRef.current.videoHeight / (videoRef.current.videoWidth / width);
+videoRef.current.width = width;
+videoRef.current.height = height;
 
-      videoRef.current.setAttribute("width", width);
-      videoRef.current.setAttribute("height", height);
-      canvasRef.current.setAttribute("width", width);
-      canvasRef.current.setAttribute("height", height);
+canvasRef.current.width = width;
+canvasRef.current.height = height;
       streaming.current = true;
 
     }
   }
 
 
-  const handleStartButton = (ev) => {
+  const handleStartButton = (ev: React.MouseEvent<HTMLButtonElement>) => {
     takePicture();
     ev.preventDefault();
   }
@@ -122,7 +122,7 @@ const Upload = () => {
 
   const handleCallGeminiApi = async()=>{
     const formData = new FormData();
-
+    if(!capturedImage) return;
   formData.append("image", capturedImage);
 
       const res = await axios.post("/api/uploadToGemini",formData,{

@@ -4,6 +4,8 @@ import Link from "next/link";
 import { Pill, Activity } from "lucide-react";
 import { useState } from "react";
 import axios from "axios";
+import type { FormEvent } from "react";
+
 import supabase from "../lib/supabase";
 export default function Login() {
 
@@ -12,7 +14,7 @@ export default function Login() {
     password:""
   })
 
-  const handleSubmit = async(e)=>{
+  const handleSubmit = async(e:React.FormEvent<HTMLFormElement>)=>{
     e.preventDefault();
     try{
          const {data,error} =  await supabase.auth.signInWithPassword({

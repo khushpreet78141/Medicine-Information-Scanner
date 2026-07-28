@@ -5,6 +5,7 @@ import { useState } from 'react';
 import { FaTablets } from "react-icons/fa";
 import { MdAddAlarm } from "react-icons/md";
 import supabase from '../lib/supabase';
+import type { ChangeEvent } from "react";
 const Reminder = () => {
 
   const [formData, setFormData] = useState({
@@ -36,7 +37,7 @@ const Reminder = () => {
       return "User not authenticated"
     }
 
-    const {data2,error} = await supabase.from("reminders").insert({
+    const {data:data2,error} = await supabase.from("reminders").insert({
 
     user_id:user.id,
     quantity:formData.quantity,
@@ -53,7 +54,7 @@ const times = formData.timing.split(",");
 for (let index = 0; index < times.length; index++) {
     const element = times[index];
     
-    const {data3,error2} = await supabase.from("Reminder_Times").insert({
+    const {data:data3,error:error2} = await supabase.from("Reminder_Times").insert({
     time:element.trim()
 });
 
@@ -73,7 +74,7 @@ for (let index = 0; index < times.length; index++) {
   const [showNotifications, setShowNotifications] = useState(false);
   
 
-  const showNotificationFunction = (e)=>{
+  const showNotificationFunction = (e:ChangeEvent<HTMLInputElement>)=>{
     setShowNotifications(e.target.checked);
     async function showNotification() {
   const result = await Notification.requestPermission();
@@ -84,7 +85,7 @@ for (let index = 0; index < times.length; index++) {
     serviceWorkerRegistration.showNotification("Vibration Sample", {
       body: "Buzz! Buzz!",
       icon: "../images/touch/chrome-touch-icon-192x192.png",
-      vibrate: [200, 100, 200, 100, 200, 100, 200],
+      //vibrate: [200, 100, 200, 100, 200, 100, 200],
       tag: "vibration-sample",
     });
     

@@ -1,8 +1,8 @@
 import supabase from "@/src/lib/supabase";
 import { timeStamp } from "console";
 import { Meie_Script } from "next/font/google";
-//const webpush = require('web-push');
-import webpush from "web-push"
+const webpush = require('web-push');
+//import webpush from "web-push"
 webpush.setVapidDetails(
     "mailto:khushpreetkaur78141@gmail.com",
     process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY!,
@@ -18,7 +18,7 @@ export async function GET(request: Request) {
     
     console.log("currentTime :",currentTime);
      
-    
+
     const {data:reminder,error} = await supabase.from("Reminder-Times").select("*").eq("time",currentTime);
     if (error) {
   return Response.json(
@@ -63,7 +63,7 @@ if (!reminder || reminder.length === 0) {
 
     if (error) {
         return Response.json(
-            { success: false, error: error.message },
+            { success: false, error: error },
             { status: 500 }
         );      
     }

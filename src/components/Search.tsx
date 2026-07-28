@@ -4,7 +4,7 @@ import { GiMedicines } from "react-icons/gi";
 import { useState } from 'react';
 import axios from 'axios';
 const Search = () => {
-    const [searchInput, setSearchInput] = useState<String>("")
+    const [searchInput, setSearchInput] = useState("")
     const [selectedCategory, setSelectedCategory] = useState<String>("")
     const category = [
         "All",
@@ -43,7 +43,7 @@ const Search = () => {
 
         }])
 
-    const handleChangeSearch = (e)=>{
+    const handleChangeSearch = (e:React.ChangeEvent<HTMLInputElement>)=>{
         setSearchInput(e.target.value.trim());
         
     }
@@ -53,7 +53,7 @@ const Search = () => {
 
     }
 
-    const handleRequestSearch = async(e)=>{
+    const handleRequestSearch = async(e:React.KeyboardEvent<HTMLInputElement>)=>{
       if(e.key === 'Enter'){
           const res = await axios.get(`/api/medicineAPI/?name=${searchInput}`);
           console.log(res.data.result.results);

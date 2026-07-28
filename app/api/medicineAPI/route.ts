@@ -78,6 +78,7 @@ If nothing relevant is found:
     message:"Text not return By Gemini API"
   });
   }
+
   const text = response.text
   .replace(/```json/g, "")
   .replace(/```/g, "")
@@ -107,7 +108,6 @@ If nothing relevant is found:
     precautions:medicine.precautions,
     name:medicine.name,
 
-
   });
 
   console.log(data2);
@@ -117,3 +117,7 @@ If nothing relevant is found:
   });
 
 }
+
+
+
+
