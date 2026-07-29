@@ -111,7 +111,7 @@ if(submitting){
   return (
     <div className="relative min-h-screen">
       <div className=' text-blue-950'>
-        <h1 className='font-black font-bold text-5xl'>Reminders</h1>
+        <h1 className='font-black font-bold text-4xl'>Reminders</h1>
         <p className='my-1 '>Daily Reminders , Weekly Reminders  , Monthly Reminders</p>
         <div className='ml-[800px] flex items-center gap-1 font-extrabold'><input type="checkbox" name="" id="" checked={showNotifications} onChange={showNotificationFunction} />Show Notifications</div>
         <button className='flex items-center min-w-4xl m-2 my-8 p-1 justify-center rounded-4xl bg-blue-950 text-white px-3 gap-5 text-2xl' onClick={handleAddReminder}> <MdAddAlarm />Add Reminder</button>
