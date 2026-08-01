@@ -59,15 +59,12 @@ const Search = () => {
       if(e.key === 'Enter'){
         setShowSearching(true)
           const res = await axios.get(`/api/medicineAPI/?name=${searchInput}`);
-          console.log(res.data.result.results);
-          
+          console.log(res.data.result.results); 
          setMedicineData(res.data.result.results ?? []);
         setShowSearching(false);
       }
-      
     }
-
-    
+  
   return (
     <div className='pl-10 '>
       <h1 className=' text-4xl text-blue-950 font-bold'> Medicine Search </h1>

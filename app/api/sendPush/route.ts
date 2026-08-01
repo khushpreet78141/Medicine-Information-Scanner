@@ -19,7 +19,7 @@ export async function GET(request: Request) {
     console.log("currentTime :",currentTime);
      
 
-    const {data:reminder,error} = await supabase.from("Reminder-Times").select("*").eq("time",currentTime);
+    const {data:reminder,error} = await supabase.from("Reminder_Times").select("*").eq("time",currentTime);
     if (error) {
   return Response.json(
     { success: false, error: error.message },
@@ -33,6 +33,7 @@ if (!reminder || reminder.length === 0) {
     message: "No reminders at this time.",
   });
 }
+
     for (let index = 0; index < reminder.length; index++) {
         const element = reminder[index];
         const {data:reminders,error:reminder_error} = await supabase.from("reminders").select("*").eq("id",element.reminder_id).single();
@@ -54,7 +55,7 @@ if (!reminder || reminder.length === 0) {
                             keys: ele.keys,
                     };
 
-         await webpush.sendNotification(ele,  JSON.stringify({
+         await webpush.sendNotification(subscription,  JSON.stringify({
         title: "Medicine Reminder",
         body: `Time to take your medicine 💊 ${reminders.medicine_name} . `
     }));
@@ -68,6 +69,7 @@ if (!reminder || reminder.length === 0) {
         );      
     }
    
+
     return Response.json({
     success: true,
     message: "Notifications sent."
