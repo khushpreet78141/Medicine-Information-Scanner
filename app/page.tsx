@@ -6,6 +6,7 @@ import Search from "@/src/components/Search";
 import Reminder from "@/src/components/Reminder";
 import Login from "@/src/components/Login";
 import Register from "@/src/components/Register";
+import Prescription from "@/src/components/Prescription";
 import useServiceWorker from "@/src/hooks/useServiceWorker";
 import supabase from "@/src/lib/supabase";
 import { useState } from "react";
@@ -93,6 +94,7 @@ export default function Home() {
         {activeField === "upload" && <Upload />}
         {activeField === "search" && <Search />}
         {activeField === "reminder" && <Reminder />}
+        {activeField === "prescription" && <Prescription/>}
     </div>
 </div>
 
