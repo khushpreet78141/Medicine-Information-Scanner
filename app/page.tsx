@@ -9,11 +9,13 @@ import Register from "@/src/components/Register";
 import Prescription from "@/src/components/Prescription";
 import useServiceWorker from "@/src/hooks/useServiceWorker";
 import supabase from "@/src/lib/supabase";
+import History from "@/src/components/History";
 import { useState } from "react";
 import { useEffect } from "react";
 import { HeartPulse } from 'lucide-react';
 import { BriefcaseMedical } from 'lucide-react';
 import { ScanQrCode } from 'lucide-react';
+
 
 export default function Home() {
   const [showLogin, setShowLogin] = useState(true);
@@ -95,6 +97,7 @@ export default function Home() {
         {activeField === "search" && <Search />}
         {activeField === "reminder" && <Reminder />}
         {activeField === "prescription" && <Prescription/>}
+        {activeField === "history" && <History/>}
     </div>
 </div>
 
