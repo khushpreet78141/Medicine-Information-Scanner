@@ -2,7 +2,7 @@ import React from 'react'
 
 const Prescription = () => {
   return (
-    <div>
+    <div className=''>
       Prescription Scanner to be built yet
     </div>
   )

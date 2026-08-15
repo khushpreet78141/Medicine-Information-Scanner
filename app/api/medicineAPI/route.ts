@@ -9,21 +9,22 @@ export async function GET(request: NextRequest) {
   const name = searchParams.get('name');
   console.log(name);
 
-  const { data, error:error1 } = await supabase
+  const { data:data1, error:error1 } = await supabase
   .from("Medicine")
   .select("*")
   .eq("name", name)
   .maybeSingle();
 
 
-  if (data) {
+  if (data1) {
     return Response.json({
         source: "database",
-        result: data,
+        result: data1,
     });
 }
 
-console.log(data);
+
+console.log(data1);
 
   const response = await ai.models.generateContent({
   model: "gemini-2.5-flash-lite",
@@ -60,6 +61,7 @@ Do not include markdown or explanations.
       "precautions": []
     }
   ]
+
 }
 
 If nothing relevant is found:
@@ -87,36 +89,56 @@ If nothing relevant is found:
   const medicine = JSON.parse(text);
   console.log(medicine);
 
+  const result = medicine.results?.[0];
+
+  if (!result) {
+  return Response.json(
+    {
+      success: false,
+      message: "No medicine found"
+    },
+    { status: 404 }
+  );
+  }
+
   if (medicine.error) {
-    return Response.json({
-      status:404,
-      message:"Response not given by Gemini"
-    })
+     return Response.json(
+    {
+      success: false,
+      message: "No relevant medicines found"
+    },
+    { status: 404 }
+  );
 
   // return 404 or appropriate response
-
 }
- const {data:data2,error:error2} = await supabase
+
+const { data: data2, error: error2 } = await supabase
   .from("Medicine")
   .insert({
-    
-    generic_name: medicine.generic_name,
-    quantity: medicine.quantity,
-    category: medicine.category,
-    uses:medicine.uses,
-    side_effects:medicine.side_effects,
-    precautions:medicine.precautions,
-    name:medicine.name,
+    generic_name: result.generic_name,
+    quantity: result.quantity,
+    category: result.category,
+    uses: result.uses,
+    side_effects: result.side_effects,
+    precautions: result.precautions,
+    name: result.name,
+  })
+  .select();
 
-  });
 
-  console.log(data2);
-  console.log(error2);
+  console.log("Data after searching in search Bar",data2);
+  console.log("Error after searching in search Bar",error2);
+  
   return Response.json({
     result: medicine,
   });
 
+
 }
+
+
+
 
 
 

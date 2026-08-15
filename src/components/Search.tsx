@@ -78,16 +78,16 @@ const Search = () => {
       <div className='flex gap-5 overflow-auto mt-5'>
         {showSearching && <div className='text-2xl text-gray-500 font-bold p-5'>Loading...</div>}
          {!showSearching && medicineData.map((item,index)=>(
-            <div key={index} className='max-w-96 min-h-60 border border-gray-400 rounded-2xl p-2 hover:transition-all hover:scale-103 hover:border-blue-950 hover:duration-200'>
+            <div key={index} className='max-w-96 min-h-60 border border-gray-400 rounded-2xl m-3 p-2 hover:transition-all hover:scale-103 hover:border-blue-950 hover:duration-200'>
             <div className='text-2xl m-1 text-blue-950 '><GiMedicines /></div>
             <h1 className='text-xl font-bold text-blue-950'>{item.name}</h1>
             <h2 className='text-[14px]'>quantity : <span className='text-gray-700'>{item.quantity}</span></h2>
             <h2  className='text-[14px] '>category : <span className='text-gray-700'>{item.category}</span></h2>
-              <h2  className='text-[14px] text-gray-700'>Uses : {item.uses}</h2>
-              <div  className='text-[14px] text-gray-700'>Side Effects :{item.side_effects.map((item,index)=>(
-                <h2 className="pl-3" key={index}>{item}</h2>
+              <h2  className='text-[14px] '>Uses : <span className='text-gray-700'>{item.uses}</span></h2>
+              <div  className='text-[14px]'>Side Effects : {item.side_effects.map((item,index)=>(
+                <h2 className="pl-3 text-gray-700" key={index}>{item}</h2>
               ))}</div>
-            
+            {/*2026-08-14 05:59:50.744363+00*/}
         </div>
          ))}
         
