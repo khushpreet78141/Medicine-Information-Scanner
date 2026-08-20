@@ -4,7 +4,7 @@ import { AiFillEdit } from "react-icons/ai";
 import { IoCameraOutline, IoRefreshOutline } from "react-icons/io5";
 import { useState } from "react";
 const Prescription = () => {
-  const [first, setScanByCamera] = useState(second)
+  const [first, setScanByCamera] = useState(false);
   return (
     <div className="min-h-screen bg-gray-50 p-6 md:p-10">
 
@@ -69,7 +69,7 @@ const Prescription = () => {
               Capture with Camera
             </button>
           </div>
-
+              
         </div>
 
 
@@ -105,6 +105,7 @@ const Prescription = () => {
               <p className="text-sm mt-1">
                 Your uploaded image will appear here
               </p>
+
             </div>
 
           </div>
@@ -264,15 +265,11 @@ const Prescription = () => {
         <button className="mt-5 text-purple-600 font-medium text-sm hover:text-purple-700">
           + Add another medicine
         </button>
-
-
         {/* Bottom Action */}
         <div className="flex justify-end mt-6">
-
           <button className="px-6 py-3 bg-purple-600 text-white rounded-xl font-medium hover:bg-purple-700 transition">
             Save Medicines
           </button>
-
         </div>
 
       </div>
