@@ -2,9 +2,119 @@ import React from "react";
 import { RiQrScan2Line, RiUploadCloud2Line } from "react-icons/ri";
 import { AiFillEdit } from "react-icons/ai";
 import { IoCameraOutline, IoRefreshOutline } from "react-icons/io5";
-import { useState } from "react";
+import { useState, useRef } from "react";
 const Prescription = () => {
-  const [first, setScanByCamera] = useState(false);
+  const [scanByCamera, setScanByCamera] = useState(false);
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const streamRef = useRef<MediaStream | null>(null);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const streaming = useRef(false);
+  let width = 400;
+  let height = 400;
+  const [video, setVideo] = useState(false);
+  const [capturedImage, setCapturedImage] = useState<File | null>(null);
+  const [previewUrl, setPreviewUrl] = useState<string>("");
+
+
+  const handleCapture = async () => {
+    setVideo(true)
+    setScanByCamera(true);
+    navigator.mediaDevices
+      .getUserMedia({ video: true, audio: false })
+      .then(async (stream) => {
+        streamRef.current = stream;
+        if (videoRef.current) {
+          videoRef.current.srcObject = stream;
+          await videoRef.current.play();
+        }
+      })
+      .catch((err) => {
+        console.error(`An error occurred: ${err}`);
+      });
+
+  }
+
+  const handleVideoListener = () => {
+    if (!canvasRef.current || !videoRef.current) return;
+
+    if (!streaming.current) {
+
+      height = videoRef.current.videoHeight / (videoRef.current.videoWidth / width);
+      videoRef.current.width = width;
+      videoRef.current.height = height;
+
+      canvasRef.current.width = width;
+      canvasRef.current.height = height;
+      streaming.current = true;
+
+    }
+  }
+
+  const handleStartButton = (ev: React.MouseEvent<HTMLButtonElement>) => {
+
+    takePicture();
+    ev.preventDefault();
+
+  }
+
+  function takePicture() {
+    if (!canvasRef.current || !videoRef.current) return;
+
+    const context = canvasRef.current.getContext("2d");
+    if (!context) return;
+    if (width && height) {
+      canvasRef.current.width = width;
+      canvasRef.current.height = height;
+      context.drawImage(videoRef.current, 0, 0, width, height);
+
+      //const data = canvasRef.current.toDataURL("image/png");
+      canvasRef.current?.toBlob((blob) => {
+        if (!blob) return;
+
+        const file = new File([blob], "captured-image.png", {
+          type: "image/png",
+        });
+
+        setCapturedImage(file);
+
+        const url = URL.createObjectURL(file);
+        setPreviewUrl(url);
+
+      });
+
+    } else {
+      //clearPhoto();
+    }
+  }
+
+  const handleStopScanning = () => {
+    if (streamRef.current) {
+      streamRef.current.getTracks().forEach((track) => {
+        track.stop();
+      });
+      streamRef.current = null;
+    }
+    if (videoRef.current) {
+      videoRef.current.srcObject = null;
+    }
+    setVideo(false);
+  };
+
+    const handleSelectFile = (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
+  
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const imageUrl = URL.createObjectURL(file);
+    setCapturedImage(file)
+    
+    setPreviewUrl(imageUrl)
+   
+    
+  };
+
+
   return (
     <div className="min-h-screen bg-gray-50 p-6 md:p-10">
 
@@ -26,7 +136,7 @@ const Prescription = () => {
         <div className="bg-white border border-gray-200 rounded-2xl p-6 shadow-sm">
 
           <div className="flex items-start gap-3 mb-6">
-            <div className="w-10 h-10 rounded-xl bg-purple-100 text-purple-600 flex items-center justify-center font-bold">
+            <div className="w-10 h-10 rounded-xl  text-purple-600 flex items-center justify-center font-bold">
               1
             </div>
 
@@ -38,38 +148,45 @@ const Prescription = () => {
               <p className="text-gray-500 text-sm mt-1">
                 Upload a clear image of your prescription.
               </p>
+
             </div>
           </div>
 
           {/* Upload Area */}
-          <div className="border-2 border-dashed border-gray-300 rounded-2xl h-72 flex flex-col items-center justify-center bg-gray-50 hover:bg-gray-100 transition">
 
-            <div className="w-16 h-16 rounded-full bg-purple-100 flex items-center justify-center mb-4">
-              <RiUploadCloud2Line className="text-purple-600 text-3xl" />
-            </div>
+          {video ? <><div ><video ref={videoRef} className="rounded-2xl" onCanPlay={handleVideoListener} autoPlay></video></div> <div className="mx-3 text-center mt-1 "><button className="bg-blue-950 text-white m-2 p-1 rounded-xl px-2" onClick={handleStartButton}>Take Snapshot</button> <button onClick={handleStopScanning} className="bg-blue-950 text-white m-2 p-1 rounded-xl px-2 ">Stop Scanning</button></div></> :
 
-            <h3 className="font-semibold text-gray-800">
-              Upload your prescription
-            </h3>
+            <div className="border-2 border-dashed border-gray-300 rounded-2xl h-72 flex flex-col items-center justify-center bg-gray-50 hover:bg-gray-100 transition">
 
-            <p className="text-sm text-gray-500 mt-1">
-              PNG, JPG or JPEG
-            </p>
-            <input type="file" name="" id="" className="mt-5 px-4   py-2.5 bg-purple-600 text-white rounded-xl font-medium hover:bg-purple-700 transition "/>
+              <div className="w-16 h-16 rounded-full bg-purple-100 flex items-center justify-center mb-4">
+                <RiUploadCloud2Line className="text-purple-600 text-3xl" />
+              </div>
 
-            {/*<button onClick={()=>setSelectFileOpen(true)} className="mt-5 px-5 py-2.5 bg-purple-600 text-white rounded-xl font-medium hover:bg-purple-700 transition">
+              <h3 className="font-semibold text-gray-800">
+                Upload your prescription
+              </h3>
+
+              <p className="text-sm text-gray-500 mt-1">
+                PNG, JPG or JPEG
+              </p>
+
+              <input type="file" name="" id="" className="mt-5 px-4   py-2.5 bg-purple-600 text-white rounded-xl font-medium hover:bg-purple-700 transition " onClick={handleSelectFile}/>
+
+              {/*<button onClick={()=>setSelectFileOpen(true)} className="mt-5 px-5 py-2.5 bg-purple-600 text-white rounded-xl font-medium hover:bg-purple-700 transition">
               Choose Image
             </button>*/}
-          </div>
+            </div>
+          }
 
           {/* Camera */}
           <div className="flex justify-center mt-5">
-            <button onClick={()=>setScanByCamera(true)} className="flex items-center gap-2 px-5 py-2.5 border border-gray-300 rounded-xl hover:bg-gray-100 transition">
+
+            <button onClick={handleCapture} className="flex items-center gap-2 px-5 py-2.5 border border-gray-300 rounded-xl hover:bg-gray-100 transition">
               <IoCameraOutline className="text-xl" />
               Capture with Camera
             </button>
+
           </div>
-              
         </div>
 
 
@@ -77,7 +194,7 @@ const Prescription = () => {
         <div className="bg-white border border-gray-200 rounded-2xl p-6 shadow-sm">
 
           <div className="flex items-start gap-3 mb-6">
-            <div className="w-10 h-10 rounded-xl bg-blue-100 text-blue-600 flex items-center justify-center font-bold">
+            <div className="w-10 h-10 rounded-xl text-blue-600 flex items-center justify-center font-bold">
               2
             </div>
 
@@ -117,7 +234,8 @@ const Prescription = () => {
               <IoRefreshOutline />
               Retake
             </button>
-
+              
+              
             <button className="flex-1 flex items-center justify-center gap-2 px-4 py-3 bg-purple-600 text-white rounded-xl font-medium hover:bg-purple-700 transition">
               <RiQrScan2Line className="text-xl" />
               Scan & Analyze
@@ -138,7 +256,7 @@ const Prescription = () => {
 
           <div className="flex items-start gap-3">
 
-            <div className="w-10 h-10 rounded-xl bg-green-100 text-green-600 flex items-center justify-center font-bold">
+            <div className="w-10 h-10 rounded-xl text-green-600 flex items-center justify-center font-bold">
               3
             </div>
 

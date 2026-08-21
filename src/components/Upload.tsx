@@ -69,6 +69,8 @@ canvasRef.current.height = height;
   }
 
 
+
+
   const handleStartButton = (ev: React.MouseEvent<HTMLButtonElement>) => {
     takePicture();
     ev.preventDefault();
@@ -133,8 +135,9 @@ canvasRef.current.height = height;
   );
   console.log(res.data.result);
   setAnalysis(res.data.result); 
-  
   }
+
+  
 
 return (
   <>
