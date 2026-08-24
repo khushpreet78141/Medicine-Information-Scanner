@@ -3,6 +3,7 @@ import { RiQrScan2Line, RiUploadCloud2Line } from "react-icons/ri";
 import { AiFillEdit } from "react-icons/ai";
 import { IoCameraOutline, IoRefreshOutline } from "react-icons/io5";
 import { useState, useRef } from "react";
+import Image from 'next/image'
 const Prescription = () => {
   const [scanByCamera, setScanByCamera] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -13,7 +14,7 @@ const Prescription = () => {
   let height = 400;
   const [video, setVideo] = useState(false);
   const [capturedImage, setCapturedImage] = useState<File | null>(null);
-  const [previewUrl, setPreviewUrl] = useState<string>("");
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
 
 
   const handleCapture = async () => {
@@ -51,13 +52,14 @@ const Prescription = () => {
   }
 
   const handleStartButton = (ev: React.MouseEvent<HTMLButtonElement>) => {
-
+    console.log("start button called");
     takePicture();
     ev.preventDefault();
 
   }
 
   function takePicture() {
+    console.log("Take picture called");
     if (!canvasRef.current || !videoRef.current) return;
 
     const context = canvasRef.current.getContext("2d");
@@ -79,6 +81,17 @@ const Prescription = () => {
 
         const url = URL.createObjectURL(file);
         setPreviewUrl(url);
+        setVideo(false);
+        setScanByCamera(false);
+        if (streamRef.current) {
+      streamRef.current.getTracks().forEach((track) => {
+        track.stop();
+      });
+      streamRef.current = null;
+    }
+    if (videoRef.current) {
+      videoRef.current.srcObject = null;
+    }
 
       });
 
@@ -88,6 +101,7 @@ const Prescription = () => {
   }
 
   const handleStopScanning = () => {
+    console.log("Stop scanning called")
     if (streamRef.current) {
       streamRef.current.getTracks().forEach((track) => {
         track.stop();
@@ -107,12 +121,21 @@ const Prescription = () => {
     const file = e.target.files?.[0];
     if (!file) return;
     const imageUrl = URL.createObjectURL(file);
-    setCapturedImage(file)
+    setCapturedImage(file);
     
-    setPreviewUrl(imageUrl)
+    setPreviewUrl(imageUrl);
    
     
   };
+
+  const handleRetake = ()=>{
+    setPreviewUrl("");
+      handleCapture();
+  }
+
+  const handleAnalyze = ()=>{
+    
+  }
 
 
   return (
@@ -170,7 +193,7 @@ const Prescription = () => {
                 PNG, JPG or JPEG
               </p>
 
-              <input type="file" name="" id="" className="mt-5 px-4   py-2.5 bg-purple-600 text-white rounded-xl font-medium hover:bg-purple-700 transition " onClick={handleSelectFile}/>
+              <input type="file" name="" id="" className="mt-5 px-4   py-2.5 bg-purple-600 text-white rounded-xl font-medium hover:bg-purple-700 transition " onChange={handleSelectFile}/>
 
               {/*<button onClick={()=>setSelectFileOpen(true)} className="mt-5 px-5 py-2.5 bg-purple-600 text-white rounded-xl font-medium hover:bg-purple-700 transition">
               Choose Image
@@ -213,6 +236,8 @@ const Prescription = () => {
           <div className="border border-gray-200 rounded-2xl h-72 bg-gray-100 flex items-center justify-center">
 
             <div className="text-center text-gray-400">
+              <canvas ref={canvasRef} className="hidden"></canvas>
+             {previewUrl ?  <><img src={previewUrl} alt="scanned image " width={250} height={250}/> </>: <>
               <RiUploadCloud2Line className="text-5xl mx-auto mb-3" />
 
               <p className="font-medium">
@@ -222,21 +247,21 @@ const Prescription = () => {
               <p className="text-sm mt-1">
                 Your uploaded image will appear here
               </p>
-
+              </>
+}
             </div>
-
           </div>
 
           {/* Actions */}
           <div className="flex gap-3 mt-5">
 
-            <button className="flex-1 flex items-center justify-center gap-2 px-4 py-3 border border-gray-300 rounded-xl hover:bg-gray-100 transition">
+            <button  onClick={handleRetake} className="flex-1 flex items-center justify-center gap-2 px-4 py-3 border border-gray-300 rounded-xl hover:bg-gray-100 transition">
               <IoRefreshOutline />
               Retake
             </button>
               
               
-            <button className="flex-1 flex items-center justify-center gap-2 px-4 py-3 bg-purple-600 text-white rounded-xl font-medium hover:bg-purple-700 transition">
+            <button onClick={handleAnalyze} className="flex-1 flex items-center justify-center gap-2 px-4 py-3 bg-purple-600 text-white rounded-xl font-medium hover:bg-purple-700 transition">
               <RiQrScan2Line className="text-xl" />
               Scan & Analyze
             </button>

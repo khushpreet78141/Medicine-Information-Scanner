@@ -166,6 +166,7 @@ return (
     </div>
     {video && <button className='bg-red-700 text-white absolute top-40 right-20 p-2 rounded-2xl cursor-pointer hover:bg-red-800' onClick={handleStopScanning}>Stop Scanning</button>}
     <div>
+      
       <canvas ref={canvasRef} className="hidden"></canvas>
 
       {showPreview && previewUrl && (
