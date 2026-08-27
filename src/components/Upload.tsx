@@ -133,12 +133,15 @@ canvasRef.current.height = height;
       },
     }
   );
+
   console.log(res.data.result);
   setAnalysis(res.data.result); 
-  }
 
+  console.log("Calling Gemini API ",res.data.result);
   
-
+  }
+1
+  
 return (
   <>
     <div className='bg-blue-900 h-15 text-white text-center p-3 font-bold text-2xl'>
