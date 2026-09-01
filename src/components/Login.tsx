@@ -5,7 +5,7 @@ import { Pill, Activity } from "lucide-react";
 import { useState } from "react";
 import axios from "axios";
 import type { FormEvent } from "react";
-
+import { Toaster, toast } from 'sonner'
 import supabase from "../lib/supabase";
 export default function Login() {
 
@@ -17,12 +17,19 @@ export default function Login() {
   const handleSubmit = async(e:React.FormEvent<HTMLFormElement>)=>{
     e.preventDefault();
     try{
-         const {data,error} =  await supabase.auth.signInWithPassword({
+         const {data,error:loginError} =  await supabase.auth.signInWithPassword({
   email:loginData.email,
   password:loginData.password,
 });
 console.log("Session after login success",data.session);
 console.log(data.user);
+
+if(loginError){
+  //console.log("Error while logging in",loginError);
+    toast.error("Login failed", {
+    description: loginError.message,
+  });
+}
     
       
     }catch(error){
@@ -33,6 +40,7 @@ console.log(data.user);
 
   return (
     <div className="min-h-screen bg-zinc-950 flex items-center justify-center p-6">
+          <Toaster richColors position="top-right" expand={false}/>
       <div className="w-full max-w-6xl bg-zinc-900 border border-zinc-800 rounded-3xl overflow-hidden shadow-2xl grid md:grid-cols-2">
 
         {/* Left Side */}

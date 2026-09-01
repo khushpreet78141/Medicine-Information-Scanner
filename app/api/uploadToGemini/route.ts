@@ -58,6 +58,8 @@ export async function POST(req: Request) {
    medicine = JSON.parse(text);
 
   }
+  console.log("raw response given by the API ",response.text);
+  console.log("Backend medicine api ",medicine);
   if (medicine.error) {
     return Response.json({
       status:404,

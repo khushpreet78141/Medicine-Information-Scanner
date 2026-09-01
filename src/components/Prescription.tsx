@@ -352,7 +352,7 @@ const Prescription = () => {
 
               <div className="w-16 h-16 rounded-full bg-purple-100 flex items-center justify-center mb-4">
 
-                <RiUploadCloud2Line className="text-purple-600 text-3xl" />
+                <RiUploadCloud2Line className="text-blue-700 text-3xl" />
 
               </div>
 
@@ -367,7 +367,7 @@ const Prescription = () => {
               <input
                 type="file"
                 accept="image/png,image/jpeg,image/jpg"
-                className="mt-5 px-4 py-2.5 bg-purple-600 text-white rounded-xl font-medium hover:bg-purple-700 transition"
+                className="mt-5 px-4 py-2.5 bg-blue-700 text-white rounded-xl font-medium hover:bg-purple-700 transition"
                 onChange={handleSelectFile}
               />
 
@@ -463,7 +463,7 @@ const Prescription = () => {
             <button
               onClick={handleCallGeminiApi}
               disabled={!capturedImage}
-              className="flex-1 flex items-center justify-center gap-2 px-4 py-3 bg-purple-600 text-white rounded-xl font-medium hover:bg-purple-700 transition disabled:opacity-50 disabled:cursor-not-allowed"
+              className="flex-1 flex items-center justify-center gap-2 px-4 py-3 bg-blue-600 text-white rounded-xl font-medium hover:bg-blue-700 transition disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <RiQrScan2Line className="text-xl" />
               Scan & Analyze

@@ -106,11 +106,7 @@ const Reminder = () => {
     }
     setSubmitting(false);
     setAddReminder(false);
-
     }
-   
-    
-
   }
 
   const handleAddReminder = () => {
@@ -136,7 +132,7 @@ const Reminder = () => {
         });
 
         // Get a PushSubscription object
-        const pushSubscription =
+        const pushSubscription = 
           await serviceWorkerRegistration.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY });
         console.log("pushSubscription", pushSubscription);
 
@@ -250,12 +246,12 @@ setEditingId(id);
 
 
   return (
-    <div className="relative min-h-screen">
+    <div className="relative min-h-screen m-3">
       <div className=' text-blue-950'>
         <h1 className='font-black font-bold text-4xl'>Reminders</h1>
         <p className='my-1 '>Daily Reminders , Weekly Reminders  , Monthly Reminders</p>
         <div className='ml-[800px] flex items-center gap-1 font-extrabold'><input type="checkbox" name="" id="" checked={showNotifications} onChange={showNotificationFunction} />Show Notifications</div>
-        <button className='flex items-center min-w-4xl m-2 my-8 p-1 justify-center rounded-4xl bg-blue-950 text-white px-3 gap-5 text-2xl' onClick={handleAddReminder}> <MdAddAlarm />Add Reminder</button>
+        <button className='flex items-center min-w-4xl m-2 my-8 p-1 justify-center rounded-4xl bg-blue-700 text-white px-3 gap-5 text-2xl' onClick={handleAddReminder}> <MdAddAlarm />Add Reminder</button>
         {allStoredReminders.length === 0 && <h1 className='text-gray-600 font-bold text-center mt-40 text-2xl'>No Reminders Yet</h1>}
       <div className='flex overflow-auto ml-15 flex-wrap  gap-10 mt-10 p-5'> {allStoredReminders.length !== 0 && (
       
