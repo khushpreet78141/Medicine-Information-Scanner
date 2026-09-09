@@ -17,8 +17,7 @@ export async function GET(request: Request) {
     });
     
     console.log("currentTime :",currentTime);
-     
-
+    
     const {data:reminder,error} = await supabase.from("Reminder_Times").select("*").eq("time",currentTime);
     if (error) {
   return Response.json(
@@ -67,9 +66,8 @@ if (!reminder || reminder.length === 0) {
             { success: false, error: error },
             { status: 500 }
         );      
-    }
+    } 
    
-
     return Response.json({
     success: true,
     message: "Notifications sent."

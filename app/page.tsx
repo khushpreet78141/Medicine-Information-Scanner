@@ -142,6 +142,20 @@ export default function Home() {
   const [showLogin, setShowLogin] = useState(true);
   const [loadingStateLogin, setLoadingStateLogin] = useState(false);
   const [activeField, setActiveField] = useState("upload");
+  // useEffect(() => {
+//  setLoadingStateLogin(true)
+//  const {
+//    data: { subscription },
+//  } = supabase.auth.onAuthStateChange((event, session) => {
+//    setShowLogin(!session);
+    
+//  });
+//  setLoadingStateLogin(false)
+//    console.log("Get user subscription API has been called....")
+
+//  return () => subscription.unsubscribe();
+//}, []);
+ 
 
   useServiceWorker();
 
