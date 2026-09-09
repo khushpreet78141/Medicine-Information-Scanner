@@ -10,12 +10,15 @@ webpush.setVapidDetails(
 );
 
 export async function GET(request: Request) {
-    const currentTime = new Date().toLocaleTimeString("en-GB",{
-        hour:"2-digit",
-        minute:"2-digit",
-        hour12:false
-    });
-    
+
+    const currentTime = new Date().toLocaleTimeString("en-GB", {
+    timeZone: "Asia/Kolkata",
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: false
+});
+
+
     console.log("currentTime :",currentTime);
     
     const {data:reminder,error} = await supabase.from("Reminder_Times").select("*").eq("time",currentTime);
@@ -72,7 +75,6 @@ if (!reminder || reminder.length === 0) {
     success: true,
     message: "Notifications sent."
 });
-
 }
 
 
